@@ -1,0 +1,40 @@
+"use client";
+
+import { motion } from "framer-motion";
+
+const stats = [
+  { value: "10+", label: "Years Experience" },
+  { value: "$50M+", label: "Client Revenue" },
+  { value: "40%", label: "OpEx Reduction" },
+  { value: "24/7", label: "Global Support" },
+];
+
+export default function Stats() {
+  return (
+    <section className="py-20 border-y border-white/5 bg-[#010204] relative overflow-hidden">
+      {/* Фонова сітка */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] opacity-20" />
+
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center divide-x-0 md:divide-x divide-white/10">
+          {stats.map((stat, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: index * 0.1 }}
+              className="px-4"
+            >
+              <div className="text-4xl md:text-5xl font-bold text-white mb-2 tracking-tight">
+                {stat.value}
+              </div>
+              <div className="text-xs font-mono text-emerald-500 uppercase tracking-widest">
+                {stat.label}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
