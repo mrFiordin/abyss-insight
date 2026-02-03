@@ -23,11 +23,12 @@ export default function Footer() {
           </div>
 
           {/* Навігація (Заглушки) */}
-          <div className="flex gap-8 text-gray-500">
-            <span className="cursor-not-allowed hover:text-gray-400" title="Coming soon">Privacy Policy</span>
-            <span className="cursor-not-allowed hover:text-gray-400" title="Coming soon">Terms of Service</span>
-            <span className="cursor-not-allowed hover:text-gray-400" title="Coming soon">Cookies</span>
-          </div>
+          // Знайди блок посилань і заміни на це:
+<div className="flex gap-8 text-gray-500">
+    <a href="/legal/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
+    <a href="/legal/terms" className="hover:text-white transition-colors">Terms of Service</a>
+    <a href="/legal/cookies" className="hover:text-white transition-colors">Cookies</a>
+</div>
 
           {/* Соцмережі */}
           <div className="flex gap-4">
