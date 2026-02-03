@@ -1,8 +1,9 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, CheckCircle, Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { X, Send, CheckCircle, Loader2, AlertCircle } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import emailjs from "@emailjs/browser";
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -10,7 +11,9 @@ interface ContactModalProps {
 }
 
 export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
-  const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
+  const formRef = useRef<HTMLFormElement>(null);
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -20,20 +23,51 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     return () => window.removeEventListener("keydown", handleEsc);
   }, [onClose]);
 
-  // Імітація відправки форми
-  const handleSubmit = (e: React.FormEvent) => {
+  const validate = (data: FormData) => {
+    const newErrors: { [key: string]: string } = {};
+    const name = data.get("user_name") as string;
+    const email = data.get("user_email") as string;
+    const message = data.get("message") as string;
+
+    if (!name || name.length < 2) newErrors.name = "Name is required (min 2 chars)";
+    if (!email || !/^\S+@\S+\.\S+$/.test(email)) newErrors.email = "Please enter a valid email";
+    if (!message || message.length < 5) newErrors.message = "Please describe your request";
+
+    return newErrors;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formRef.current) return;
+
+    const formData = new FormData(formRef.current);
+    const validationErrors = validate(formData);
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setErrors({});
     setStatus("loading");
-    
-    // Чекаємо 1.5 секунди (ніби відправляємо)
-    setTimeout(() => {
-        setStatus("success");
-        // Через 2 секунди закриваємо вікно і скидаємо форму
-        setTimeout(() => {
-            onClose();
-            setStatus("idle");
-        }, 2000);
-    }, 1500);
+
+    try {
+      // ЗАМІНИ ЦІ ДАНІ НА СВОЇ З EMAILJS
+      await emailjs.sendForm(
+        "service_a5dk7wi",   // Наприклад: service_...
+        "template_fie65hy",  // Наприклад: template_...
+        formRef.current,
+        "SKICMx5RiUwYl4WZC"    // Наприклад: 8An3...
+      );
+      setStatus("success");
+      setTimeout(() => {
+        onClose();
+        setStatus("idle");
+      }, 3000);
+    } catch (error) {
+      console.error(error);
+      setStatus("error");
+    }
   };
 
   return (
@@ -55,7 +89,6 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
             className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg z-[70] p-4"
           >
             <div className="bg-[#0b1121] border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
-              
               <button onClick={onClose} className="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors">
                 <X className="w-6 h-6" />
               </button>
@@ -72,22 +105,32 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 <>
                     <h2 className="text-2xl font-bold text-white mb-2">Initiate Contact</h2>
                     <p className="text-gray-400 mb-8 text-sm">
-                        Tell us about your challenge. We usually respond in 2 hours.
+                        Tell us about your challenge.
                     </p>
 
-                    <form onSubmit={handleSubmit} className="space-y-5">
+                    {/* noValidate вимикає українські підказки браузера */}
+                    <form ref={formRef} onSubmit={handleSubmit} noValidate className="space-y-5">
                         <div>
                             <label className="text-xs font-mono text-gray-500 uppercase tracking-widest mb-2 block">Name</label>
-                            <input required type="text" className="w-full bg-[#020408] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500 transition-colors placeholder:text-gray-700" placeholder="John Doe" />
+                            <input name="user_name" type="text" className={`w-full bg-[#020408] border ${errors.name ? "border-red-500" : "border-white/10"} rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500 transition-colors`} placeholder="John Doe" />
+                            {errors.name && <p className="text-red-400 text-xs mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3"/> {errors.name}</p>}
                         </div>
                         <div>
                             <label className="text-xs font-mono text-gray-500 uppercase tracking-widest mb-2 block">Email</label>
-                            <input required type="email" className="w-full bg-[#020408] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500 transition-colors placeholder:text-gray-700" placeholder="john@company.com" />
+                            <input name="user_email" type="email" className={`w-full bg-[#020408] border ${errors.email ? "border-red-500" : "border-white/10"} rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500 transition-colors`} placeholder="john@company.com" />
+                            {errors.email && <p className="text-red-400 text-xs mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3"/> {errors.email}</p>}
                         </div>
                         <div>
                             <label className="text-xs font-mono text-gray-500 uppercase tracking-widest mb-2 block">Request</label>
-                            <textarea required rows={3} className="w-full bg-[#020408] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500 transition-colors resize-none placeholder:text-gray-700" placeholder="How can we help?" />
+                            <textarea name="message" rows={3} className={`w-full bg-[#020408] border ${errors.message ? "border-red-500" : "border-white/10"} rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500 transition-colors resize-none`} placeholder="How can we help?" />
+                            {errors.message && <p className="text-red-400 text-xs mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3"/> {errors.message}</p>}
                         </div>
+
+                        {status === "error" && (
+                            <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm text-center">
+                                Something went wrong. Please try again later.
+                            </div>
+                        )}
 
                         <button 
                             disabled={status === "loading"}
