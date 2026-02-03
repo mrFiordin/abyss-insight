@@ -1,0 +1,12 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="32" height="32" rx="8" fill="#020408"/>
+    
+    <path d="M16 4L4 16L16 28L28 16L16 4Z" fill="url(#neon_gradient)"/>
+    
+    <path d="M16 11L11 16L16 21L21 16L16 11Z" fill="#020408"/>
+    
+    <defs>
+        <linearGradient id="neon_gradient" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#34d399"/> <stop offset="1" stop-color="#06b6d4"/> </linearGradient>
+    </defs>
+</svg>
