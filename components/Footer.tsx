@@ -23,7 +23,6 @@ export default function Footer() {
           </div>
 
           {/* Навігація (Заглушки) */}
-          // Знайди блок посилань і заміни на це:
 <div className="flex gap-8 text-gray-500">
     <a href="/legal/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
     <a href="/legal/terms" className="hover:text-white transition-colors">Terms of Service</a>
