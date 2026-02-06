@@ -1,42 +1,33 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
-interface CTAProps {
-  onOpen: () => void;
-}
+// Ми прибрали interface CallToActionProps, бо він тут не потрібен
+export default function CallToAction() {
+  const openCalendly = () => {
+    window.open("https://calendly.com/denys-kiiashko/30min", "_blank");
+  };
 
-export default function CallToAction({ onOpen }: CTAProps) {
   return (
-    <section className="py-32 relative overflow-hidden flex items-center justify-center">
-      
-      {/* Фон - Безодня */}
-      <div className="absolute inset-0 bg-[#020408]" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-emerald-900/20 rounded-full blur-[120px]" />
-
-      <div className="container mx-auto px-6 text-center relative z-10">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          className="max-w-4xl mx-auto"
-        >
-          <h2 className="text-5xl md:text-7xl font-bold text-white mb-8 tracking-tight">
-            Stop surfacing. <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500">Dive deep.</span>
-          </h2>
-          
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+    <section className="py-32 bg-emerald-900/10 border-y border-emerald-500/10 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.1),transparent_70%)]" />
+        
+        <div className="container mx-auto px-6 text-center relative z-10">
+            <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 tracking-tight">
+                Stop <span className="text-emerald-400 italic">Surfacing</span>. <br />
+                Start <span className="text-white">Solving</span>.
+            </h2>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
+                The competition is using standard tools. Gain the unfair advantage of deep custom infrastructure.
+            </p>
+            
             <button 
-                onClick={onOpen}
-                className="px-10 py-5 bg-emerald-500 text-black font-bold text-lg rounded-full hover:bg-emerald-400 transition-all hover:scale-105 shadow-[0_0_40px_rgba(16,185,129,0.3)]"
+                onClick={openCalendly}
+                className="px-10 py-5 bg-emerald-500 text-black font-bold text-lg rounded-xl hover:shadow-[0_0_40px_rgba(16,185,129,0.5)] hover:scale-105 transition-all"
             >
-              Start Transformation
+                Start Deep Transformation <ArrowRight className="inline-block ml-2 w-5 h-5" />
             </button>
-          </div>
-        </motion.div>
-      </div>
+        </div>
     </section>
   );
 }
