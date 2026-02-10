@@ -1,13 +1,50 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google"; 
+import { Inter } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
+const inter = Inter({ subsets: ["latin"] });
 
-// Завантажуємо стильний шрифт Manrope
-const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
-
+// --- ОНОВЛЕНІ МЕТАДАНІ ---
 export const metadata: Metadata = {
-  title: "Abyss Insight | AI Implementation",
-  description: "Unlock the depth of your business data with intelligent AI solutions.",
+  metadataBase: new URL('https://abyss-insight.com'), // Твій реальний домен
+  title: {
+    default: "Abyss Insight | Enterprise AI & Highload Infrastructure",
+    template: "%s | Abyss Insight"
+  },
+  description: "We engineer Deep Tech solutions: Predictive Digital Twins, Autonomous Agents, and Highload Systems (Golang, K8s). Stop surfacing, start solving.",
+  keywords: ["AI Development", "Highload Systems", "Golang", "Kubernetes", "Digital Twins", "Enterprise AI", "Software Architecture"],
+  authors: [{ name: "Abyss Insight Team" }],
+  creator: "Abyss Insight",
+  
+  // Налаштування для соцмереж (Telegram, LinkedIn, Facebook)
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://abyss-insight.com",
+    title: "Abyss Insight | Enterprise AI & Highload Infrastructure",
+    description: "Engineering Deep Tech solutions for complex industries. From R&D to Highload Production.",
+    siteName: "Abyss Insight",
+    images: [
+      {
+        url: "/og-image.jpg", // Картинка, яку ми створимо нижче
+        width: 1200,
+        height: 630,
+        alt: "Abyss Insight - Deep Tech Infrastructure",
+      },
+    ],
+  },
+  
+  // Налаштування для Twitter/X
+  twitter: {
+    card: "summary_large_image",
+    title: "Abyss Insight | Enterprise AI",
+    description: "Engineering Deep Tech solutions. Golang, K8s, AI.",
+    images: ["/og-image.jpg"],
+  },
+  
+  icons: {
+    icon: "/icon.svg", // Твій новий фавікон
+  },
 };
 
 export default function RootLayout({
@@ -17,15 +54,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      {/* ЧОРНИЙ фон (Void) і світлий текст */}
-      <body className={`${manrope.className} bg-[#020408] text-slate-200 antialiased selection:bg-emerald-500/30 selection:text-emerald-200`}>
-        {/* Фоновий шум для текстури (як на референсах з планетами) */}
-        <div className="fixed inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none z-50 mix-blend-overlay"></div>
-        
-        {/* Глобальний градієнт-світіння зверху */}
-        <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-indigo-600/10 rounded-full blur-[120px] -z-10 pointer-events-none" />
-        
+      <body className={`${inter.className} bg-[#020408] text-white antialiased`}>
         {children}
+        <Analytics />
       </body>
     </html>
   );
